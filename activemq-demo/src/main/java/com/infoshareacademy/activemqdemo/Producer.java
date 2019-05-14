@@ -2,13 +2,8 @@ package com.infoshareacademy.activemqdemo;
 
 import java.io.IOException;
 import java.util.Scanner;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.DeliveryMode;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.MessageProducer;
-import javax.jms.Session;
+import javax.jms.*;
+
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 public class Producer {
@@ -23,7 +18,7 @@ public class Producer {
         Session session =
             connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-        Destination destination = session.createQueue("NAZWA_KOLEJKI");
+        Destination destination = session.createQueue("ISA.JJDD6.MSG.QUEUE");
 
         MessageProducer producer = session.createProducer(destination);
         producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
@@ -31,6 +26,16 @@ public class Producer {
         Scanner scanner = new Scanner(System.in);
 
         // read the message from the user
+        while (true) {
+            String message = scanner.nextLine();
+
+            Message jmsMessage = session.createTextMessage(message);
+            producer.send(jmsMessage);
+
+            if (message.equals("exit")) {
+                break;
+            }
+        }
         // send it
         // when the message = exit, send it to the queue and stop the application
 

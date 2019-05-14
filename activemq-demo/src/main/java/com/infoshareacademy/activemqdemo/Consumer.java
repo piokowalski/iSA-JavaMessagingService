@@ -26,7 +26,7 @@ public class Consumer implements Runnable, ExceptionListener {
 
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-            Destination destination = session.createQueue("NAZWA_KOLEJKI");
+            Destination destination = session.createQueue("ISA.JJDD6.MSG.QUEUE");
 
             MessageConsumer consumer = session.createConsumer(destination);
 
@@ -45,6 +45,7 @@ public class Consumer implements Runnable, ExceptionListener {
 
     @Override
     public void onException(JMSException e) {
-        System.out.println("JMS Exception occurred: " + e);
+        System.out.println
+                ("JMS Exception occurred: " + e);
     }
 }
