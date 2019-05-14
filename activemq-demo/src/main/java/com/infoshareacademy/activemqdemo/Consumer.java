@@ -1,11 +1,8 @@
 package com.infoshareacademy.activemqdemo;
 
-import javax.jms.Connection;
-import javax.jms.Destination;
-import javax.jms.ExceptionListener;
-import javax.jms.JMSException;
-import javax.jms.MessageConsumer;
-import javax.jms.Session;
+import javax.jms.*;
+import javax.sound.midi.Soundbank;
+
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 public class Consumer implements Runnable, ExceptionListener {
@@ -31,9 +28,17 @@ public class Consumer implements Runnable, ExceptionListener {
             MessageConsumer consumer = session.createConsumer(destination);
 
             System.out.println("Started ... ");
+            while (true) {
+                Message message = consumer.receive();
+                if (message instanceof TextMessage) {
+                    String msg = ((TextMessage) message).getText();
+                    System.out.println("Received: " + msg);
 
-            // receive message and print it
-            // if message = exit, stop the application
+                    if (msg.equals("exit")) {
+                        break;
+                    }
+                }
+            }
 
             consumer.close();
             session.close();
