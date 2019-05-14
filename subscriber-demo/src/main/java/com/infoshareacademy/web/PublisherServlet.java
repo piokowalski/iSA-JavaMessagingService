@@ -1,7 +1,11 @@
 package com.infoshareacademy.web;
 
 import java.io.IOException;
+import javax.annotation.Resource;
+import javax.inject.Inject;
 import javax.jms.JMSContext;
+import javax.jms.JMSProducer;
+import javax.jms.Message;
 import javax.jms.Topic;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,19 +16,21 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(urlPatterns = "/publisher")
 public class PublisherServlet extends HttpServlet {
 
-    // add annotations
-
+    @Inject
     private JMSContext jmsContext;
 
+    @Resource(lookup = "java:/jms/topic/ISA.TOPIC")
     private Topic topic;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-        throws ServletException, IOException {
+            throws ServletException, IOException {
 
         final String message = req.getParameter("msg");
 
-        // send message
+        Message jmsMessage = jmsContext.createTextMessage(message);
+        JMSProducer producer = jmsContext.createProducer();
+        producer.send(topic, jmsMessage);
 
         resp.getWriter().println("Message sent.");
     }
